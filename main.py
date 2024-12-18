@@ -13,6 +13,7 @@ def main():
 
     config = json.load(open('./conf.json'))
     bot = telebot.TeleBot(token=config['token'], parse_mode="html")
+    bot.send_message(chat_id=config['chat_id'], text="Checking for new citations..")
 
     search_query = scholarly.search_author(config["author_name"])
     first_author_result = next(search_query)
