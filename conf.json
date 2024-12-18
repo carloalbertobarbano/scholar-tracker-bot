@@ -1,4 +1,5 @@
 {
     "token": "xxx",
-    "chat_id": "xxx"
+    "chat_id": "xxx",
+    "author_name": "xxx"
 }
