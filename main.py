@@ -14,7 +14,7 @@ def main():
     config = json.load(open('./conf.json'))
     bot = telebot.TeleBot(token=config['token'], parse_mode="html")
 
-    search_query = scholarly.search_author('Carlo Alberto Barbano')
+    search_query = scholarly.search_author(config["author_name"])
     first_author_result = next(search_query)
 
     author = scholarly.fill(first_author_result)
