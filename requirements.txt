@@ -1,0 +1,3 @@
+pyTelegramBotAPI
+sqlitedict
+git+https://github.com/scholarly-python-package/scholarly.git
