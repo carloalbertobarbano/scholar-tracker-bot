@@ -46,8 +46,11 @@ def main():
             if old_citations != pub_citations:
                 db[pub_id]['citations'] = pub_citations
                 bot.send_message(chat_id=config['chat_id'], 
-                                 text=f"New citations ({pub_citations - old_citations}) for: <i>{pub_title}</i> ({pub_year})\n")
-            
+                                 text=f"New citations ({pub_citations - old_citations}, tot {pub_citations}) for: <i>{pub_title}</i> ({pub_year})\n")
+    
+    db.close()
+
+
 if __name__ == '__main__':
     main()
     
