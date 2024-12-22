@@ -10,6 +10,7 @@ def main():
     os.makedirs('./data', exist_ok=True)
 
     db = SqliteDict('./data/db.sqlite', autocommit=True)
+    print("DB:", db)
 
     config = json.load(open('./conf.json'))
     bot = telebot.TeleBot(token=config['token'], parse_mode="html")
@@ -44,10 +45,12 @@ def main():
         else:
             old_citations = db[pub_id]['citations']
             if old_citations != pub_citations:
-                db[pub_id]['citations'] = pub_citations
+                db[pub_id] = {'title': pub_title, 'citations': pub_citations, 'year': pub_year}
+                print(pub_id, "new citations:", db[pub_id]['citations'], pub_citations)
                 bot.send_message(chat_id=config['chat_id'], 
                                  text=f"New citations ({pub_citations - old_citations}, tot {pub_citations}) for: <i>{pub_title}</i> ({pub_year})\n")
     
+    db.commit()
     db.close()
 
 
