@@ -3,6 +3,7 @@ import telebot
 import os
 from pprint import pprint
 from scholarly import scholarly
+from scholarly.data_types import Author, AuthorSource
 from sqlitedict import SqliteDict
 
 
@@ -17,9 +18,14 @@ def main():
     bot.send_message(chat_id=config['chat_id'], text="Checking for new citations..")
 
     search_query = scholarly.search_author(config["author_name"])
-    first_author_result = next(search_query)
+    # print(search_query)
+    # first_author_result = next(search_query)
+    author = Author(scholar_id=config['author_id'],
+                    container_type="Author")
+    author['filled'] = []
+    author['source'] = AuthorSource.AUTHOR_PROFILE_PAGE
 
-    author = scholarly.fill(first_author_result)
+    author = scholarly.fill(author)
     tot_author_citation = author['citedby']
     publications = author['publications']
 
