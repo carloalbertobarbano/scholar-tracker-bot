@@ -17,9 +17,10 @@ def main():
     bot = telebot.TeleBot(token=config['token'], parse_mode="html")
     bot.send_message(chat_id=config['chat_id'], text="Checking for new citations..")
 
-    search_query = scholarly.search_author(config["author_name"])
+    # search_query = scholarly.search_author(config["author_name"])
     # print(search_query)
     # first_author_result = next(search_query)
+    
     author = Author(scholar_id=config['author_id'],
                     container_type="Author")
     author['filled'] = []
