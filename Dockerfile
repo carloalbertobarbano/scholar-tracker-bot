@@ -6,7 +6,7 @@ COPY requirements.txt /app/requirements.txt
 RUN pip install -r /app/requirements.txt
 
 # Copy app
-COPY main.py /app/main.py
+COPY *.py /app/
 
 # Set working directory
 WORKDIR /app

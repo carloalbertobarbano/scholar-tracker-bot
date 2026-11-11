@@ -1,5 +1,7 @@
 {
     "token": "xxx",
     "chat_id": "xxx",
-    "author_name": "xxx"
+    "author_id": "xxx",
+    "summary_weekday": 0,
+    "chart_theme": "dark"
 }

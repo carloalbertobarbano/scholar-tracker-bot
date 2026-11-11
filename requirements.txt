@@ -1,3 +1,6 @@
 pyTelegramBotAPI
 sqlitedict
+matplotlib
+numpy
+bibtexparser<2
 git+https://github.com/scholarly-python-package/scholarly.git
