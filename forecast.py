@@ -24,7 +24,7 @@ year and later), the bot's own recorded totals, and, for recent dates not
 covered by either, totals reconstructed from paper snapshots: per-paper counts
 overlap (one citing paper can cite several of the author's papers), so paper
 gains are divided by the current overlap ratio sum(paper counts) / total.
-The profile fit uses the last AUTHOR_FIT_YEARS years plus the current one.
+The profile fit covers at least the last AUTHOR_FIT_MIN_YEARS years of history.
 
 Ranges are 80% intervals from a negative-binomial approximation:
 var = mean + OVERDISPERSION * mean^2, covering Poisson noise and uncertainty
@@ -44,7 +44,7 @@ Z80 = 1.2816
 PSEUDO_COUNT = 0.5          # keeps the rate > 0 for papers with no citations yet
 TREND_THRESHOLD = 0.2       # |g| above this is labelled accelerating / slowing
 INFORMATIVE_RATIO = 0.75    # posterior sd of g must shrink below this * prior sd
-AUTHOR_FIT_YEARS = 1        # complete years before the current one used for the profile fit
+AUTHOR_FIT_MIN_YEARS = 3    # the profile fit always spans at least this many years
 
 
 def years_between(d0, d1):
@@ -332,9 +332,12 @@ def build_report(today, author_now, pubs, pub_history, author_actual):
     a_hist = _merge_scholar_anchors(a_hist, author_now, today)
     # Fit on recent years only: one growth rate cannot describe a whole career
     # (fast early ramp-up, then a plateau). The chart still shows everything.
-    fit_from = dt.date(today.year - AUTHOR_FIT_YEARS, 1, 1)
-    a_fit = fit_rate(snapshot_intervals([(d, c) for d, c, _ in a_hist if d >= fit_from], today),
-                     0.0, 0.5)
+    # Start at the last point on or before (today - AUTHOR_FIT_MIN_YEARS), so the
+    # window never covers less than that.
+    series = [(d, c) for d, c, _ in a_hist]
+    cutoff = today - dt.timedelta(days=round(AUTHOR_FIT_MIN_YEARS * DAYS_PER_YEAR))
+    start = max((i for i, (d, _) in enumerate(series) if d <= cutoff), default=0)
+    a_fit = fit_rate(snapshot_intervals(series[start:], today), 0.0, 0.5)
     a_gain = a_fit.expected(0.0, horizon) if a_fit else 0.0
     a_lo, a_hi = interval80(a_gain)
     year_count, year_source = _year_count(a_hist, author_now, today)
